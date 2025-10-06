@@ -15,7 +15,6 @@
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-
   gtag('config', 'G-7L9S6V0X5X');
 </script>
 
@@ -37,6 +36,7 @@
             background-position: center;
             background-attachment: fixed;
             position: relative;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -53,9 +53,9 @@
         .container {
             position: relative;
             z-index: 1;
-            max-width: 500px;
+            max-width: 420px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 25px 20px 80px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -63,32 +63,32 @@
 
         .header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 45px;
         }
 
         .logo {
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 20px;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 15px;
             filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
         }
 
         .header h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             color: #ffffff;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .section-card {
             background: rgba(13, 13, 13, 0.7);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px 25px;
-            margin-bottom: 20px;
+            border-radius: 18px;
+            padding: 25px 22px;
+            margin-bottom: 16px;
             margin-right: auto;
-            width: 240px;
+            width: 220px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(242, 228, 201, 0.1);
             cursor: pointer;
@@ -102,14 +102,14 @@
         }
 
         .section-card h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .section-card p {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: rgba(242, 228, 201, 0.8);
             line-height: 1.4;
         }
@@ -117,32 +117,101 @@
         .footer {
             margin-top: auto;
             text-align: center;
-            padding: 30px 20px;
+            padding: 25px 20px 15px;
             color: rgba(242, 228, 201, 0.6);
             font-size: 0.85rem;
         }
 
         .footer p {
-            margin: 5px 0;
+            margin: 4px 0;
+        }
+
+        /* Botón de actualizaciones */
+        .updates-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #0088cc 0%, #0066aa 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .updates-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
+            background: linear-gradient(135deg, #0099dd 0%, #0077bb 100%);
+        }
+
+        .updates-button:active {
+            transform: translateY(-1px);
+        }
+
+        .updates-icon {
+            width: 18px;
+            height: 18px;
+            fill: white;
+        }
+
+        /* Optimizado para pantallas 19:9 y 20:9 */
+        @media (min-aspect-ratio: 19/9) {
+            .container {
+                padding: 20px 20px 70px;
+            }
+            
+            .header {
+                margin-bottom: 35px;
+            }
+
+            .logo {
+                width: 90px;
+                height: 90px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .section-card {
+                padding: 22px 20px;
+                margin-bottom: 14px;
+            }
+
+            .section-card h2 {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 768px) {
             .container {
-                padding: 30px 15px;
+                padding: 25px 15px 75px;
+                max-width: 100%;
             }
 
             .logo {
-                width: 100px;
-                height: 100px;
+                width: 90px;
+                height: 90px;
             }
 
             .header h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
 
             .section-card {
-                padding: 25px 20px;
+                padding: 22px 18px;
                 max-width: 100%;
+                width: 100%;
+                margin-right: 0;
             }
 
             .section-card h2 {
@@ -155,12 +224,39 @@
                 font-size: 2rem;
             }
 
+            .section-card {
+                padding: 20px 16px;
+            }
+
             .section-card h2 {
-                font-size: 1.3rem;
+                font-size: 1.4rem;
             }
 
             .section-card p {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
+            }
+
+            .updates-button {
+                bottom: 15px;
+                right: 15px;
+                padding: 10px 16px;
+                font-size: 0.8rem;
+            }
+
+            .updates-icon {
+                width: 16px;
+                height: 16px;
+            }
+        }
+
+        /* Pantallas extra altas (20:9) */
+        @media (min-aspect-ratio: 20/9) {
+            .container {
+                padding: 18px 20px 70px;
+            }
+
+            .section-card {
+                margin-bottom: 12px;
             }
         }
     </style>
@@ -192,9 +288,17 @@
         <footer class="footer">
             <p><strong>BOMBEROS TOOLKIT</strong></p>
             <p>Desarrollado para bomberos</p>
-            <p>Versión 1.0 | Oct-2025 | WA: +51 946772995</p>
+            <p>Versión 1.1 | Oct-2025 | WA: +51 946772995</p>
         </footer>
     </div>
+
+    <!-- Botón de actualizaciones -->
+    <button class="updates-button" onclick="openTelegram()" aria-label="Ver actualizaciones en Telegram">
+        <svg class="updates-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+        Actualizaciones
+    </button>
 
     <script>
         function showServiciosMenu() {
@@ -207,6 +311,10 @@
 
         function showModulosMenu() {
             location.href = 'SegundaPantalla/index3.html';
+        }
+
+        function openTelegram() {
+            window.open('https://t.me/bomberostoolkit', '_blank');
         }
     </script>
 </body>
