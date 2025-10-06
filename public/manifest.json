@@ -1,0 +1,103 @@
+{
+  "name": "Bomberos Toolkit CGBVP",
+  "short_name": "Bomberos Toolkit",
+  "description": "Herramientas y conocimiento para bomberos del Cuerpo General de Bomberos Voluntarios del Perú",
+  "version": "1.0.0",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0D0D0D",
+  "theme_color": "#8C0303",
+  "orientation": "portrait-primary",
+  "scope": "./",
+  "lang": "es",
+  "dir": "ltr",
+  "categories": ["education", "utilities", "productivity"],
+  "icons": [
+    {
+      "src": "assets/icons/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Servicios",
+      "short_name": "Servicios",
+      "description": "Acceso rápido a servicios de emergencia",
+      "url": "./SegundaPantalla/index1.html",
+      "icons": [{ "src": "assets/icons/logo.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Herramientas",
+      "short_name": "Herramientas",
+      "description": "Acceso rápido a herramientas",
+      "url": "./SegundaPantalla/index2.html",
+      "icons": [{ "src": "assets/icons/logo.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Timer RCP",
+      "short_name": "RCP",
+      "description": "Cronómetro para reanimación cardiopulmonar",
+      "url": "./herramientas/rcp-timer/index.html",
+      "icons": [{ "src": "assets/icons/logo.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Claves CGBVP",
+      "short_name": "Claves",
+      "description": "Códigos de comunicación",
+      "url": "./herramientas/claves/index.html",
+      "icons": [{ "src": "assets/icons/logo.svg", "sizes": "any" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}

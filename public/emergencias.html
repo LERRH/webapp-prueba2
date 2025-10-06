@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor de Emergencias - Bomberos Perú</title>
+    <link rel="icon" type="image/svg+xml" href="../../assets/icons/logo.svg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-btn {
+            color: #75020f;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .controles {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-actualizacion {
+            font-size: 0.95rem;
+        }
+
+        .btn-actualizar {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-actualizar:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-actualizar:disabled {
+            background: #6b7280;
+            cursor: not-allowed;
+        }
+
+        .emergencias-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .emergencia-card {
+            background: #f8f8f8;
+            border-left: 5px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .emergencia-card:hover {
+            background: #f0f0f0;
+        }
+
+        .emergencia-card.incendio { border-left-color: #f97316; }
+        .emergencia-card.medica { border-left-color: #ef4444; }
+        .emergencia-card.peligroso { border-left-color: #eab308; }
+
+        .badge-nueva {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse { 0%,100% {opacity:1;} 50% {opacity:0.7;} }
+
+        .emergencia-header { display: flex; gap: 15px; align-items: flex-start; }
+        .emergencia-icon { font-size: 2rem; flex-shrink:0; }
+        .emergencia-info { flex:1; }
+
+        .tiempo { font-size: 0.9rem; color: #6b7280; margin-bottom: 6px; font-weight:600; }
+        .tipo { font-size: 1.2rem; font-weight: 600; margin-bottom: 8px; color: #1a1a1a; }
+        .direccion { display: flex; gap:6px; font-size: 0.95rem; color: #374151; margin-bottom: 6px; }
+        .distrito { font-size: 0.9rem; color:#6b7280; margin-bottom:12px; }
+
+        .tags { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+        .tag { padding:5px 12px; border-radius:6px; font-size:0.85rem; font-weight:600; }
+        .tag-numero { background:#dbeafe; color:#1e40af; }
+        .tag-estado { background:#d1fae5; color:#065f46; }
+
+        .botones { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+        .btn { flex:1; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all 0.3s; }
+        .btn-maps { background:#2563eb; color:white; }
+        .btn-maps:hover { background:#1d4ed8; }
+        .btn-waze { background:#06b6d4; color:white; }
+        .btn-waze:hover { background:#0891b2; }
+
+        .loading, .error-message { text-align:center; padding:40px 20px; }
+        .loading-spinner, .error-icon { font-size:3rem; margin-bottom:15px; }
+
+        .footer { text-align:center; color:#9ca3af; font-size:0.9rem; line-height:1.6; margin-top:25px; }
+
+        @media(max-width:768px){
+            .container{padding:20px 15px;}
+            .header h1{font-size:1.5rem;}
+            .header p{font-size:0.9rem;}
+            .controles{flex-direction:column; align-items:stretch; text-align:center;}
+            .btn-actualizar{width:100%; justify-content:center;}
+            .botones{flex-direction:column;}
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="../../SegundaPantalla/index3.html" class="back-btn">← Volver</a>
+        <h1>🚨 Emergencias en Tiempo Real</h1>
+        <p>Últimas emergencias reportadas a Bomberos Perú - Norte</p>
+    </header>
+
+    <div class="container">
+        <div class="controles">
+            <div class="info-actualizacion" id="ultima-actualizacion">
+                Presiona el botón para cargar emergencias
+            </div>
+            <button class="btn-actualizar" id="btn-actualizar" onclick="actualizarManual()">
+                🔄 Actualizar Ahora
+            </button>
+        </div>
+
+        <div class="emergencias-container" id="emergencias-container">
+            <div class="loading">
+                <div class="loading-spinner">⏳</div>
+                <p>Presiona "Actualizar Ahora" para cargar las emergencias</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>⚡ Datos obtenidos de sgonorte.bomberosperu.gob.pe/24horas</p>
+            <p>Sistema de monitoreo - Bomberos Toolkit</p>
+        </div>
+    </div>
+
+    <script>
+        async function obtenerEmergencias() {
+            try {
+                const res = await fetch('/api/emergencias');
+                const data = await res.json();
+                if(data.success) return data.emergencias;
+                throw new Error(data.message || 'Error al obtener emergencias');
+            } catch(e){ throw e; }
+        }
+
+        function calcularTiempo(fechaISO){
+            const fecha=new Date(fechaISO), ahora=new Date(), diff=ahora-fecha;
+            const seg=Math.floor(diff/1000), min=Math.floor(seg/60), h=Math.floor(min/60);
+            if(h>0) return `Hace ${h}h ${min%60}m`; if(min>0) return `Hace ${min} min`;
+            return `Hace ${seg} seg`;
+        }
+
+        function getTipoEmergencia(tipo){
+            if(tipo.includes('INCENDIO')) return {clase:'incendio', icono:'🔥'};
+            if(tipo.includes('MEDICA')||tipo.includes('MÉDICA')) return {clase:'medica', icono:'🚑'};
+            if(tipo.includes('PELIGROS')||tipo.includes('GAS')) return {clase:'peligroso', icono:'⚠️'};
+            return {clase:'peligroso', icono:'🚨'};
+        }
+
+        function renderizar(emergencias){
+            const container=document.getElementById('emergencias-container');
+            if(!emergencias||emergencias.length===0){
+                container.innerHTML=`<div class="error-message"><div class="error-icon">⚠️</div><h3>No hay emergencias disponibles</h3><p>Intenta actualizar nuevamente en unos momentos</p></div>`;
+                return;
+            }
+            container.innerHTML=emergencias.map((e,i)=>{
+                const tipoInfo=getTipoEmergencia(e.tipo);
+                const tipoSimple=e.tipo.split('/')[0].trim();
+                const esNueva=i===0;
+                const sinCoordenadas=!e.lat||!e.lon||(e.lat===0&&e.lon===0);
+                const botonesHTML=sinCoordenadas
+                    ? `<div style="color:#ef4444;font-weight:600;margin-top:10px;">🚒 Pedir 10.18 a central</div>`
+                    : `<div class="botones"><button class="btn btn-maps" onclick="abrirMaps(${e.lat},${e.lon})">📍 Maps</button><button class="btn btn-waze" onclick="abrirWaze(${e.lat},${e.lon})">🚗 Waze</button></div>`;
+                return `<div class="emergencia-card ${tipoInfo.clase}">${esNueva?'<div class="badge-nueva">🆕 NUEVA</div>':''}<div class="emergencia-header"><div class="emergencia-icon">${tipoInfo.icono}</div><div class="emergencia-info"><div class="tiempo">${calcularTiempo(e.fechaHora)}</div><div class="tipo">${tipoSimple}</div><div class="direccion">📍 ${e.direccion}</div><div class="tags"><span class="tag tag-numero">#${e.parte}</span><span class="tag tag-estado">${e.estado}</span></div>${botonesHTML}</div></div></div>`;
+            }).join('');
+        }
+
+        async function actualizarManual(){
+            const btn=document.getElementById('btn-actualizar');
+            const container=document.getElementById('emergencias-container');
+            btn.disabled=true; btn.innerHTML='⏳ Actualizando...';
+            container.innerHTML=`<div class="loading"><div class="loading-spinner">⏳</div><p>Obteniendo emergencias...</p></div>`;
+            try{
+                const emergencias=await obtenerEmergencias();
+                renderizar(emergencias);
+                const ahora=new Date();
+                document.getElementById('ultima-actualizacion').innerHTML=`Última actualización: <strong>${ahora.toLocaleTimeString('es-PE')}</strong>`;
+                btn.innerHTML='✅ Actualizado';
+                setTimeout(()=>{btn.innerHTML='🔄 Actualizar Ahora'; btn.disabled=false;},2000);
+            } catch(e){
+                container.innerHTML=`<div class="error-message"><div class="error-icon">❌</div><h3>Error al obtener emergencias</h3><p>${e.message}</p><p style="font-size:0.9rem;margin-top:10px;">Intenta nuevamente en unos momentos</p></div>`;
+                btn.innerHTML='🔄 Actualizar Ahora'; btn.disabled=false;
+            }
+        }
+
+        function abrirMaps(lat,lng){window.open(`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,'_blank');}
+        function abrirWaze(lat,lng){window.open(`https://waze.com/ul?ll=${lat},${lng}&navigate=yes`,'_blank');}
+
+            // Actualizar automáticamente al abrir la página
+         window.addEventListener('DOMContentLoaded', () => {
+        actualizarManual();
+         });
+
+    </script>
+</body>
+</html>
