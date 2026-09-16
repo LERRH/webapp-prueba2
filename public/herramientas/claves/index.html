@@ -16,28 +16,91 @@
 <style>
         .header {
             background: #26262b;
-            padding: 12px 16px 12px 70px;
+            padding: 8px 12px 8px 54px;
+        }
+
+        .back-button {
+            top: 8px;
+            left: 10px;
+            width: 34px;
+            height: 34px;
+        }
+
+        .back-button svg {
+            width: 16px;
+            height: 16px;
         }
 
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .header h1 {
-            font-size: 1.1em;
-            margin-bottom: 2px;
+        .stats-badge {
+            flex-shrink: 0;
+            font-size: 0.75em;
+            font-weight: 700;
+            color: #d0d0d5;
+            white-space: nowrap;
         }
 
-        .header p {
+        .toggle-filters-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+            min-width: 0;
+            background: #19171b;
+            border: 2px solid #3a3a40;
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 6px 10px;
             font-size: 0.78em;
-            opacity: 0.8;
-            margin-bottom: 6px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .toggle-filters-btn svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+
+        .toggle-filters-btn span {
+            flex: 1;
+            text-align: left;
+        }
+
+        .toggle-filters-btn .chevron {
+            transition: transform 0.2s;
+        }
+
+        .toggle-filters-btn.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .filters-panel {
+            display: none;
+            padding: 8px 16px 10px;
+            background: #1e1e22;
+        }
+
+        .filters-panel.open {
+            display: block;
         }
 
         .search-container {
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 auto 8px;
             position: relative;
         }
 
@@ -80,16 +143,16 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 8px;
+            padding: 6px 8px;
         }
 
         .filter-tabs {
+            max-width: 600px;
+            margin: 0 auto;
             display: flex;
             gap: 5px;
-            margin-bottom: 8px;
             overflow-x: auto;
             flex-wrap: wrap;
-            padding-bottom: 5px;
         }
 
         .filter-tab {
@@ -115,20 +178,6 @@
             border-color: #5a5a62;
         }
 
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 12px;
-            background: #26262b;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            font-size: 0.75em;
-        }
-
-        .stat-number {
-            font-weight: bold;
-            color: #d0d0d5;
-        }
 
         .emergency-legend {
             background: #26262b;
@@ -179,46 +228,58 @@
         .claves-list {
             background: #26262b;
             border-radius: 8px;
-            overflow: hidden;
+            column-count: 2;
+            column-gap: 0;
+            column-rule: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .group-header {
+            column-span: all;
+            background: #1e1e22;
+            color: #9a9aa2;
+            font-size: 0.68em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 5px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
 
         .clave-item {
             display: flex;
             align-items: center;
-            padding: 6px 10px;
+            padding: 3px 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            transition: all 0.2s;
+            transition: background 0.2s;
+            break-inside: avoid;
         }
 
         .clave-item:hover {
             background: rgba(255, 255, 255, 0.05);
         }
 
-        .clave-item:last-child {
-            border-bottom: none;
-        }
-
         .clave-code {
             background: #4a4a52;
             color: #ffffff;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 3px 6px;
+            border-radius: 5px;
             font-weight: bold;
-            font-size: 0.75em;
-            min-width: 58px;
+            font-size: 0.68em;
+            min-width: 48px;
             text-align: center;
-            margin-right: 10px;
+            margin-right: 7px;
             flex-shrink: 0;
         }
 
         .clave-content {
             flex: 1;
+            min-width: 0;
         }
 
         .clave-desc {
             color: #ffffff;
-            font-size: 0.8em;
-            line-height: 1.3;
+            font-size: 0.72em;
+            line-height: 1.25;
         }
 
         .no-results {
@@ -267,10 +328,6 @@
         }
 
         @media (max-width: 768px) {
-            .header {
-                padding: 15px 15px 15px 70px;
-            }
-
             .legend-grid {
                 grid-template-columns: 1fr;
             }
@@ -296,17 +353,21 @@
 
     <header class="header">
         <div class="header-content">
-            <h1>CLAVES CGBVP</h1>
-            <p>Códigos de comunicación del CGBVP</p>
-            
-            <div class="search-container">
-                <input type="text" class="search-input" id="searchInput" placeholder="Buscar código o descripción..." aria-label="Buscar código o descripción">
-                <button class="clear-btn" id="clearBtn" aria-label="Limpiar búsqueda">×</button>
-            </div>
+            <button class="toggle-filters-btn" id="toggleFiltersBtn" aria-expanded="false" aria-controls="filtersPanel">
+                <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+                <span>Buscar y filtrar</span>
+                <svg class="chevron" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <span class="stats-badge" id="statsBadge">144/144</span>
         </div>
     </header>
 
-    <div class="container">
+    <div class="filters-panel" id="filtersPanel">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar código o descripción..." aria-label="Buscar código o descripción">
+            <button class="clear-btn" id="clearBtn" aria-label="Limpiar búsqueda">×</button>
+        </div>
+
         <div class="filter-tabs">
             <button class="filter-tab active" data-filter="all">Todos</button>
             <button class="filter-tab" data-filter="servicio">Servicios</button>
@@ -318,7 +379,9 @@
             <button class="filter-tab" data-filter="asociacion">Asociación</button>
             <button class="filter-tab" data-filter="comando">Comando Nacional</button>
         </div>
+    </div>
 
+    <div class="container">
         <div class="emergency-legend" id="emergencyLegend">
             <h3>NIVELES DE EMERGENCIA</h3>
             <div class="legend-grid">
@@ -351,11 +414,6 @@
                     <span>Código 6 - Masivo/Fuera control</span>
                 </div>
             </div>
-        </div>
-
-        <div class="stats-bar">
-            <div class="stat">Total: <span class="stat-number" id="totalClaves">0</span></div>
-            <div class="stat">Mostrando: <span class="stat-number" id="visibleClaves">0</span></div>
         </div>
 
         <div class="claves-list" id="clavesList"></div>
@@ -516,6 +574,18 @@
             { codigo: "90.35", descripcion: "Jefe de la Oficina de Tecnología de la Información y Telecomunicaciones (OTIT)", categoria: "comando" }
         ];
 
+        const CATEGORY_LABELS = {
+            servicio: 'Servicios',
+            emergencia: 'Emergencias',
+            especiales: 'Especiales',
+            jerarquia: 'Jerarquías',
+            compania: 'Compañía',
+            alarmas: 'Alarmas',
+            asociacion: 'Asociación',
+            comando: 'Comando Nacional',
+        };
+        const CATEGORY_ORDER = Object.keys(CATEGORY_LABELS);
+
         let currentFilter = 'all';
         let filteredClaves = [...claves];
 
@@ -528,29 +598,35 @@
         function render(list = filteredClaves, term = '') {
             const container = document.getElementById('clavesList');
             const noResults = document.getElementById('noResults');
-            
+
             if (list.length === 0) {
                 container.style.display = 'none';
                 noResults.style.display = 'block';
                 return;
             }
-            
+
             container.style.display = 'block';
             noResults.style.display = 'none';
-            
-            container.innerHTML = list.map(c => `
-                <div class="clave-item">
-                    <div class="clave-code">${highlightText(c.codigo, term)}</div>
-                    <div class="clave-content">
-                        <div class="clave-desc">${highlightText(c.descripcion, term)}</div>
+
+            let html = '';
+            for (const cat of CATEGORY_ORDER) {
+                const items = list.filter(c => c.categoria === cat);
+                if (items.length === 0) continue;
+                html += `<div class="group-header">${CATEGORY_LABELS[cat]}</div>`;
+                html += items.map(c => `
+                    <div class="clave-item">
+                        <div class="clave-code">${highlightText(c.codigo, term)}</div>
+                        <div class="clave-content">
+                            <div class="clave-desc">${highlightText(c.descripcion, term)}</div>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
+            container.innerHTML = html;
         }
 
         function updateStats() {
-            document.getElementById('totalClaves').textContent = claves.length;
-            document.getElementById('visibleClaves').textContent = filteredClaves.length;
+            document.getElementById('statsBadge').textContent = `${filteredClaves.length}/${claves.length}`;
         }
 
         function filter(term, cat) {
@@ -566,6 +642,15 @@
             render(filteredClaves, term);
             updateStats();
         }
+
+        const toggleFiltersBtn = document.getElementById('toggleFiltersBtn');
+        const filtersPanel = document.getElementById('filtersPanel');
+
+        toggleFiltersBtn.addEventListener('click', () => {
+            const isOpen = filtersPanel.classList.toggle('open');
+            toggleFiltersBtn.classList.toggle('open', isOpen);
+            toggleFiltersBtn.setAttribute('aria-expanded', String(isOpen));
+        });
 
         const searchInput = document.getElementById('searchInput');
         const clearBtn = document.getElementById('clearBtn');
