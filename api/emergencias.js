@@ -4,6 +4,7 @@ import * as cheerio from "cheerio";
 export default async function handler(req, res) {
   try {
     const { data: html } = await axios.get("https://sgonorte.bomberosperu.gob.pe/24horas/", {
+      timeout: 8000,
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
@@ -50,6 +51,9 @@ export default async function handler(req, res) {
       }
     });
 
+    // Cachea en el CDN de Vercel: evita re-scrapear en cada visita y sirve
+    // datos "stale" mientras se refresca en segundo plano si el origen falla.
+    res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=180");
     res.status(200).json({
       success: true,
       total: emergencias.length,
@@ -58,9 +62,12 @@ export default async function handler(req, res) {
     });
   } catch (error) {
     console.error("Error al obtener emergencias:", error.message);
-    res.status(500).json({
+    const isTimeout = error.code === "ECONNABORTED";
+    res.status(isTimeout ? 504 : 500).json({
       success: false,
-      message: "Error al obtener emergencias",
+      message: isTimeout
+        ? "El sitio de Bomberos Perú no respondió a tiempo"
+        : "Error al obtener emergencias",
       error: error.message,
     });
   }

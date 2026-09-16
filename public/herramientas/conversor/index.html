@@ -9,61 +9,11 @@
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7L9S6V0X5X"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+<script src="/assets/js/analytics.js"></script>
 
-  gtag('config', 'G-7L9S6V0X5X');
-</script>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: #19171b;
-            color: #ffffff;
-        }
-
-        .header {
-            background: #2b0307;
-            color: #ffffff;
-            padding: 20px 20px 20px 80px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .back-button {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            width: 45px;
-            height: 45px;
-            background: rgba(117, 2, 15, 0.9);
-            border: none;
-            border-radius: 50%;
-            color: #ffffff;
-            font-size: 1.5rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            z-index: 100;
-        }
-
-        .back-button:hover {
-            background: #75020f;
-            transform: scale(1.1);
-        }
-
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/herramientas.css">
+<style>
         .header h1 {
             font-size: 1.8em;
             margin-bottom: 5px;
@@ -255,7 +205,7 @@
     </style>
 </head>
 <body>
-    <button class="back-button" onclick="window.history.back()">←</button>
+    <button class="back-button" onclick="window.history.back()" aria-label="Volver">←</button>
 
     <header class="header">
         <h1>CONVERSOR DE UNIDADES</h1>
@@ -279,21 +229,21 @@
             <h2 class="section-title">PRESIÓN</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>PSI</label>
+                    <label for="psi">PSI</label>
                     <input type="number" id="psi" oninput="convertPresion('psi')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>Bar</label>
+                    <label for="bar">Bar</label>
                     <input type="number" id="bar" oninput="convertPresion('bar')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>kPa</label>
+                    <label for="kpa">kPa</label>
                     <input type="number" id="kpa" oninput="convertPresion('kpa')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>mH2O</label>
+                    <label for="mh2o">mH2O</label>
                     <input type="number" id="mh2o" oninput="convertPresion('mh2o')" placeholder="0.00">
                 </div>
             </div>
@@ -304,21 +254,21 @@
             <h2 class="section-title">DISTANCIA</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Metros</label>
+                    <label for="metros">Metros</label>
                     <input type="number" id="metros" oninput="convertDistancia('metros')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>Pies</label>
+                    <label for="pies">Pies</label>
                     <input type="number" id="pies" oninput="convertDistancia('pies')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Pulgadas</label>
+                    <label for="pulgadas">Pulgadas</label>
                     <input type="number" id="pulgadas" oninput="convertDistancia('pulgadas')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>Centímetros</label>
+                    <label for="cm">Centímetros</label>
                     <input type="number" id="cm" oninput="convertDistancia('cm')" placeholder="0.00">
                 </div>
             </div>
@@ -329,17 +279,17 @@
             <h2 class="section-title">ÁREA</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>m²</label>
+                    <label for="m2">m²</label>
                     <input type="number" id="m2" oninput="convertArea('m2')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>ft²</label>
+                    <label for="ft2">ft²</label>
                     <input type="number" id="ft2" oninput="convertArea('ft2')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Hectáreas</label>
+                    <label for="hectareas">Hectáreas</label>
                     <input type="number" id="hectareas" oninput="convertArea('hectareas')" placeholder="0.0000">
                 </div>
             </div>
@@ -350,17 +300,17 @@
             <h2 class="section-title">VOLUMEN</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Litros</label>
+                    <label for="litros">Litros</label>
                     <input type="number" id="litros" oninput="convertVolumen('litros')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>Galones</label>
+                    <label for="galones">Galones</label>
                     <input type="number" id="galones" oninput="convertVolumen('galones')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>m³</label>
+                    <label for="m3">m³</label>
                     <input type="number" id="m3" oninput="convertVolumen('m3')" placeholder="0.000">
                 </div>
             </div>
@@ -371,17 +321,17 @@
             <h2 class="section-title">PESO</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Kilogramos</label>
+                    <label for="kg">Kilogramos</label>
                     <input type="number" id="kg" oninput="convertPeso('kg')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>Libras</label>
+                    <label for="lb">Libras</label>
                     <input type="number" id="lb" oninput="convertPeso('lb')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Gramos</label>
+                    <label for="gramos">Gramos</label>
                     <input type="number" id="gramos" oninput="convertPeso('gramos')" placeholder="0">
                 </div>
             </div>
@@ -392,17 +342,17 @@
             <h2 class="section-title">FUERZA</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Newton (N)</label>
+                    <label for="newton">Newton (N)</label>
                     <input type="number" id="newton" oninput="convertFuerza('newton')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>kgf</label>
+                    <label for="kgf">kgf</label>
                     <input type="number" id="kgf" oninput="convertFuerza('kgf')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>lbf</label>
+                    <label for="lbf">lbf</label>
                     <input type="number" id="lbf" oninput="convertFuerza('lbf')" placeholder="0.00">
                 </div>
             </div>
@@ -413,17 +363,17 @@
             <h2 class="section-title">TEMPERATURA</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Celsius (°C)</label>
+                    <label for="celsius">Celsius (°C)</label>
                     <input type="number" id="celsius" oninput="convertTemp('celsius')" placeholder="0.0">
                 </div>
                 <div class="input-group">
-                    <label>Fahrenheit (°F)</label>
+                    <label for="fahrenheit">Fahrenheit (°F)</label>
                     <input type="number" id="fahrenheit" oninput="convertTemp('fahrenheit')" placeholder="0.0">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Kelvin (K)</label>
+                    <label for="kelvin">Kelvin (K)</label>
                     <input type="number" id="kelvin" oninput="convertTemp('kelvin')" placeholder="0.0">
                 </div>
             </div>
@@ -434,21 +384,21 @@
             <h2 class="section-title">CAUDAL</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>LPM (L/min)</label>
+                    <label for="lpm">LPM (L/min)</label>
                     <input type="number" id="lpm" oninput="convertCaudal('lpm')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>GPM (gal/min)</label>
+                    <label for="gpm">GPM (gal/min)</label>
                     <input type="number" id="gpm" oninput="convertCaudal('gpm')" placeholder="0.00">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>L/s</label>
+                    <label for="ls">L/s</label>
                     <input type="number" id="ls" oninput="convertCaudal('ls')" placeholder="0.00">
                 </div>
                 <div class="input-group">
-                    <label>m³/s</label>
+                    <label for="m3s">m³/s</label>
                     <input type="number" id="m3s" oninput="convertCaudal('m3s')" placeholder="0.00000">
                 </div>
             </div>
@@ -459,21 +409,21 @@
             <h2 class="section-title">CALCULADOR DE OXÍGENO</h2>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Presión del cilindro (PSI)</label>
+                    <label for="oxPsi">Presión del cilindro (PSI)</label>
                     <input type="number" id="oxPsi" value="2000">
                 </div>
                 <div class="input-group">
-                    <label>Factor del cilindro</label>
+                    <label for="oxFactor">Factor del cilindro</label>
                     <input type="number" id="oxFactor" value="0.28" step="0.01">
                 </div>
             </div>
             <div class="converter-row">
                 <div class="input-group">
-                    <label>Flujo (LPM)</label>
+                    <label for="oxFlujo">Flujo (LPM)</label>
                     <input type="number" id="oxFlujo" value="15">
                 </div>
                 <div class="input-group">
-                    <label>Duración (minutos)</label>
+                    <label for="oxDuracion">Duración (minutos)</label>
                     <input type="number" id="oxDuracion" readonly>
                 </div>
             </div>
@@ -634,5 +584,6 @@
             }
         }
     </script>
+    <script src="/register-sw.js" defer></script>
 </body>
 </html>

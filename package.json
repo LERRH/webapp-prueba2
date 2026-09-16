@@ -1,11 +1,12 @@
 {
   "name": "bomberos-toolkit",
   "version": "1.0.0",
-    "type": "module",
+  "type": "module",
   "description": "Monitor de emergencias Bomberos Perú",
   "main": "api/emergencias.js",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev",
+    "local": "node dev-server.js"
   },
   "dependencies": {
     "axios": "^1.6.0",

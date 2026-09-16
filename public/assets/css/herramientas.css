@@ -1,0 +1,40 @@
+/* Estilos compartidos por las páginas de public/herramientas/*. */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #19171b;
+    color: #ffffff;
+}
+
+.header {
+    background: #2b0307;
+    color: #ffffff;
+    padding: 20px 20px 20px 80px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+}
+
+.back-button {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    width: 45px;
+    height: 45px;
+    background: rgba(117, 2, 15, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 100;
+}
+
+.back-button:hover {
+    background: #75020f;
+    transform: scale(1.1);
+}
