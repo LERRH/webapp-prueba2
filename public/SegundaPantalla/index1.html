@@ -70,6 +70,16 @@
             transform: scale(1.1);
         }
 
+        .back-button svg {
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         .services-list {
             display: flex;
             flex-direction: column;
@@ -144,7 +154,7 @@
     </style>
 </head>
 <body>
-    <button class="back-button" onclick="goBack()" aria-label="Volver">←</button>
+    <button class="back-button" onclick="goBack()" aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
 
     <div class="container">
         <header class="header">
@@ -156,9 +166,9 @@
                 Emergencia 24H
             </div>
 
-            <div class="service-item" onclick="openService('/emergencias.html')">
+            <div class="service-item" onclick="location.href='/emergencias.html'">
                 🚨 Ubicación de emergencias
-            </div>    
+            </div>
 
             <div class="service-item" onclick="openService('https://www.bomberosperu.gob.pe/sgo/ceem/SGO_CEEM_CDVehiculos.asp')">
                 Unidades en servicio

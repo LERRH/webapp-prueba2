@@ -38,3 +38,13 @@ body {
     background: #75020f;
     transform: scale(1.1);
 }
+
+.back-button svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: #ffffff;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

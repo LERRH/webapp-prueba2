@@ -46,6 +46,7 @@ Alternativa (requiere cuenta de Vercel y login por navegador): `npm run dev` eje
 ```
 api/
   emergencias.js        # función serverless: scraping de sgonorte.bomberosperu.gob.pe
+  soat.js                # función serverless: consulta de vigencia SOAT (API de la SBS)
 public/
   index.html             # landing principal
   emergencias.html       # monitor de emergencias en tiempo real
@@ -88,6 +89,7 @@ Calculadoras y utilidades interactivas:
 | `glasgow` | Calculadora de la Escala de Glasgow |
 | `rcp-timer` | Cronómetro para RCP |
 | `signos-vitales` | Referencia de signos vitales |
+| `soat` | Consulta de vigencia del SOAT por placa (API oficial de la SBS) |
 
 ## API
 
@@ -98,6 +100,19 @@ Hace scraping en vivo de `sgonorte.bomberosperu.gob.pe/24horas` y devuelve las e
 - Timeout de 8s al sitio origen.
 - Respuesta cacheada en el CDN de Vercel (`Cache-Control: s-maxage=60, stale-while-revalidate=180`).
 - Nunca se cachea en el service worker: los datos de emergencias siempre deben venir de la red.
+
+### `POST /api/soat`
+
+Consulta el estado de vigencia del SOAT de una placa contra la API de la SBS (autenticación OAuth2 + consulta vehicular). Body: `{ "placa": "ABC123" }`.
+
+Requiere estas variables de entorno (nunca hardcodeadas en el código, configuradas en Vercel → Settings → Environment Variables):
+
+- `SBS_CLIENT_ID`
+- `SBS_CLIENT_SECRET`
+- `SBS_USERNAME`
+- `SBS_PASSWORD`
+
+Para correr esto en local, crea un archivo `.env.local` (ya está en `.gitignore`, nunca se commitea) con esas 4 variables.
 
 ## PWA / Offline
 

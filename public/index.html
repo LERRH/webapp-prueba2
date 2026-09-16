@@ -7,7 +7,7 @@
     <meta name="description" content="Herramientas profesionales para bomberos">
     <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#8C0303">
+    <meta name="theme-color" content="#3d0a10">
 
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-7L9S6V0X5X"></script>
@@ -15,306 +15,446 @@
 
     <link rel="stylesheet" href="/assets/css/base.css">
 <style>
+        :root {
+            --garnet-1: #6b0f1a;
+            --garnet-2: #3d0a10;
+            --garnet-text: #b5334a;
+            --grey-card: #26262b;
+            --grey-border: rgba(255, 255, 255, 0.16);
+        }
+
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #0D0D0D;
             color: #ffffff;
-            line-height: 1.6;
-            min-height: 100vh;
-            background-image: url('assets/icons/fondo.webp');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 13, 13, 0.3);
-            z-index: 0;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 420px;
-            margin: 0 auto;
-            padding: 25px 20px 80px;
-            min-height: 100vh;
+            line-height: 1.4;
             display: flex;
             flex-direction: column;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 45px;
+        svg.icon {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
-        .logo {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 15px;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+        /* ===== HERO ===== */
+        .hero {
+            position: relative;
+            padding: 34px 16px;
+            background-image: url('assets/icons/portada.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .header h1 {
-            font-size: 2.5rem;
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(13,13,13,0.5) 0%, rgba(13,13,13,0.78) 70%, #0D0D0D 100%);
+        }
+
+        .hero-inner {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .hero-logo {
+            width: 58px;
+            height: 58px;
+            flex-shrink: 0;
+            filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.6));
+        }
+
+        .hero-text h1 {
+            font-size: 1.55rem;
             font-weight: 700;
-            color: #ffffff;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-            margin-bottom: 5px;
+            line-height: 1.1;
         }
 
-        .section-card {
-            background: rgba(13, 13, 13, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 25px 22px;
-            margin-bottom: 16px;
-            margin-right: auto;
-            margin-left: 0;
-            width: 240px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(242, 228, 201, 0.1);
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .hero-text h1 span {
+            color: var(--garnet-text);
         }
 
-        .section-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(140, 3, 3, 0.4);
-            border-color: rgba(191, 54, 4, 0.3);
+        /* ===== PAGE / SECTIONS ===== */
+        .page {
+            flex: 1;
+            width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 6px 14px 90px;
+            display: flex;
+            flex-direction: column;
         }
 
-        .section-card h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 8px;
+        .section {
+            margin-top: 14px;
         }
 
-        .section-card p {
-            font-size: 0.9rem;
-            color: rgba(242, 228, 201, 0.8);
-            line-height: 1.4;
-        }
-
-        .footer {
-            margin-top: auto;
-            text-align: left;
-            padding: 25px 20px 15px;
-            color: rgba(242, 228, 201, 0.6);
-            font-size: 0.85rem;
-            max-width: 240px;
-        }
-
-        .footer p {
-            margin: 4px 0;
-        }
-
-        /* Botón de actualizaciones */
-        .updates-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #0088cc 0%, #0066aa 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1000;
+        .section-title {
             display: flex;
             align-items: center;
             gap: 8px;
+            font-size: 1.05rem;
+            font-weight: 700;
         }
 
-        .updates-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.6);
-            background: linear-gradient(135deg, #0099dd 0%, #0077bb 100%);
-        }
-
-        .updates-button:active {
-            transform: translateY(-1px);
-        }
-
-        .updates-icon {
+        .section-title .icon {
             width: 18px;
             height: 18px;
-            fill: white;
+            flex-shrink: 0;
         }
 
-        /* Optimizado para pantallas 19:9 y 20:9 */
-        @media (min-aspect-ratio: 19/9) {
-            .container {
-                padding: 20px 20px 70px;
-            }
-            
-            .header {
-                margin-bottom: 35px;
+        .section-title .rule {
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--garnet-1), transparent);
+            border-radius: 2px;
+        }
+
+        /* ===== ACCESO RÁPIDO ===== */
+        .quick-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .quick-card {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .quick-card:active {
+            transform: scale(0.97);
+        }
+
+        .quick-card.garnet {
+            background: linear-gradient(155deg, var(--garnet-1) 0%, var(--garnet-2) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .quick-card.grey {
+            background: var(--grey-card);
+            border: 1px solid var(--grey-border);
+        }
+
+        .quick-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        .quick-title-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .quick-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        .quick-arrow {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .quick-arrow svg {
+            width: 12px;
+            height: 12px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .quick-desc {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ===== MÓDULOS ===== */
+        .modules-grid {
+            margin-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .module-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 6px;
+            border-radius: 14px;
+            background: var(--grey-card);
+            border: 1px solid var(--grey-border);
+            text-decoration: none;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .module-card:active {
+            transform: scale(0.97);
+        }
+
+        .module-icon {
+            width: 26px;
+            height: 26px;
+        }
+
+        .module-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: auto;
+            padding-top: 6px;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* ===== TELEGRAM FAB ===== */
+        .telegram-fab {
+            position: fixed;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+        }
+
+        .telegram-fab-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+            display: block;
+        }
+
+        .telegram-label {
+            white-space: nowrap;
+            background: rgba(13, 13, 13, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            font-size: 0.68rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        /* ===== PANTALLAS BAJAS: aún más compacto ===== */
+        @media (max-height: 700px) {
+            .hero {
+                padding: 22px 16px;
             }
 
-            .logo {
-                width: 90px;
-                height: 90px;
+            .hero-logo {
+                width: 46px;
+                height: 46px;
             }
 
-            .header h1 {
-                font-size: 2.2rem;
+            .hero-text h1 {
+                font-size: 1.35rem;
             }
 
-            .section-card {
-                padding: 22px 20px;
-                margin-bottom: 14px;
+            .section {
+                margin-top: 10px;
             }
 
-            .section-card h2 {
-                font-size: 1.5rem;
+            .quick-card {
+                padding: 8px 10px;
+            }
+
+            .quick-icon {
+                width: 26px;
+                height: 26px;
             }
         }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 25px 15px 75px;
-                max-width: 100%;
+        /* ===== PANTALLAS MÁS ANCHAS ===== */
+        @media (min-width: 480px) {
+            .hero-logo {
+                width: 66px;
+                height: 66px;
             }
 
-            .logo {
-                width: 90px;
-                height: 90px;
-            }
-
-            .header h1 {
-                font-size: 2.2rem;
-            }
-
-            .section-card {
-                padding: 22px 18px;
-                width: 50%;
-                max-width: 240px;
-                margin-left: 0;
-                margin-right: auto;
-            }
-
-            .section-card h2 {
-                font-size: 1.5rem;
-            }
-
-            .footer {
-                text-align: left;
-                max-width: 240px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header h1 {
-                font-size: 2rem;
-            }
-
-            .section-card {
-                padding: 20px 16px;
-            }
-
-            .section-card h2 {
-                font-size: 1.4rem;
-            }
-
-            .section-card p {
-                font-size: 0.85rem;
-            }
-
-            .updates-button {
-                bottom: 15px;
-                right: 15px;
-                padding: 10px 16px;
-                font-size: 0.8rem;
-            }
-
-            .updates-icon {
-                width: 16px;
-                height: 16px;
-            }
-        }
-
-        /* Pantallas extra altas (20:9) */
-        @media (min-aspect-ratio: 20/9) {
-            .container {
-                padding: 18px 20px 70px;
-            }
-
-            .section-card {
-                margin-bottom: 12px;
+            .hero-text h1 {
+                font-size: 1.9rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <img src="assets/icons/logo.svg" alt="Bomberos Toolkit" class="logo">
-            <h1>ToolKit</h1>
-        </header>
-
-        <main>
-            <div class="section-card" onclick="showServiciosMenu()">
-                <h2>Servicios</h2>
-                <p>Enlaces web externos</p>
+    <div class="hero">
+        <div class="hero-inner">
+            <img src="assets/icons/logo.svg" alt="Bomberos Toolkit" class="hero-logo">
+            <div class="hero-text">
+                <h1>Bomberos<br><span>Toolkit</span></h1>
             </div>
-
-            <div class="section-card" onclick="showHerramientasMenu()">
-                <h2>Herramientas</h2>
-                <p>Herramientas prácticas<br>a la mano</p>
-            </div>
-
-            <div class="section-card" onclick="showModulosMenu()">
-                <h2>Módulos</h2>
-                <p>Lecciones organizadas<br>por ejes temáticos</p>
-            </div>
-        </main>
-
-        <footer class="footer">
-            <p><strong>BOMBEROS TOOLKIT</strong></p>
-            <p>Desarrollado para bomberos</p>
-            <p>Versión 1.2 | Set-2026</p>
-        </footer>
+        </div>
     </div>
 
-    <!-- Botón de actualizaciones -->
-    <button class="updates-button" onclick="openTelegram()" aria-label="Ver actualizaciones en Telegram">
-        <svg class="updates-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
-        Actualizaciones
-    </button>
+    <main class="page">
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/></svg>
+                </span>
+                Acceso rápido <span class="rule"></span>
+            </h2>
 
-    <script>
-        function showServiciosMenu() {
-            location.href = 'SegundaPantalla/index1.html';
-        }
+            <div class="quick-grid">
+                <a class="quick-card garnet" href="https://sgonorte.bomberosperu.gob.pe/24horas" target="_blank" rel="noopener">
+                    <span class="quick-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 0-5 5v3.2c0 .84-.34 1.65-.94 2.24L4.6 14.9a1 1 0 0 0 .7 1.7h13.4a1 1 0 0 0 .7-1.7l-1.46-1.46a3.17 3.17 0 0 1-.94-2.24V8a5 5 0 0 0-5-5Z"/><path d="M9.5 19a2.5 2.5 0 0 0 5 0"/></svg>
+                    </span>
+                    <div class="quick-title-row">
+                        <span class="quick-title">Emergencias</span>
+                        <span class="quick-arrow"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+                    </div>
+                    <span class="quick-desc">CGBVP 24 h</span>
+                </a>
 
-        function showHerramientasMenu() {
-            location.href = 'SegundaPantalla/index2.html';
-        }
+                <a class="quick-card grey" href="https://www.bomberosperu.gob.pe/sgo/ceem/SGO_CEEM_CDVehiculos.asp" target="_blank" rel="noopener">
+                    <span class="quick-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M3 16V7a1 1 0 0 1 1-1h9v10"/><path d="M13 10h4l3 3v3h-2"/><circle cx="7.5" cy="17" r="1.7"/><circle cx="16.5" cy="17" r="1.7"/><path d="M9 17h6"/></svg>
+                    </span>
+                    <div class="quick-title-row">
+                        <span class="quick-title">Unidades en servicio</span>
+                        <span class="quick-arrow"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+                    </div>
+                    <span class="quick-desc">Disponibilidad y estado</span>
+                </a>
 
-        function showModulosMenu() {
-            location.href = 'SegundaPantalla/index3.html';
-        }
+                <a class="quick-card grey" href="herramientas/soat/index.html">
+                    <span class="quick-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </span>
+                    <div class="quick-title-row">
+                        <span class="quick-title">SOAT</span>
+                        <span class="quick-arrow"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+                    </div>
+                    <span class="quick-desc">Consulta y vigencia</span>
+                </a>
 
-        function openTelegram() {
-            window.open('https://t.me/bomberostoolkit', '_blank');
-        }
-    </script>
+                <a class="quick-card garnet" href="https://cel.sis.gob.pe/SisConsultaEnLinea" target="_blank" rel="noopener">
+                    <span class="quick-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4"/><path d="M12 8v8M8 12h8"/></svg>
+                    </span>
+                    <div class="quick-title-row">
+                        <span class="quick-title">SIS</span>
+                        <span class="quick-arrow"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+                    </div>
+                    <span class="quick-desc">Afiliación y cobertura</span>
+                </a>
+
+                <a class="quick-card garnet" href="https://dondemeatiendo.essalud.gob.pe/#/consulta" target="_blank" rel="noopener">
+                    <span class="quick-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M12 20s-7-4.35-9.5-8.5C1 8.5 2.5 5 6 5c2 0 3.3 1.2 4 2.2.7-1 2-2.2 4-2.2 3.5 0 5 3.5 3.5 6.5C15 15.65 12 20 12 20Z"/></svg>
+                    </span>
+                    <div class="quick-title-row">
+                        <span class="quick-title">ESSALUD</span>
+                        <span class="quick-arrow"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+                    </div>
+                    <span class="quick-desc">Afiliación y cobertura</span>
+                </a>
+
+                <a class="quick-card grey" href="herramientas/claves/index.html">
+                    <span class="quick-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="M11 12 20 3"/><path d="M16 7l2.5 2.5"/><path d="M18 5l2 2"/></svg>
+                    </span>
+                    <div class="quick-title-row">
+                        <span class="quick-title">Claves</span>
+                        <span class="quick-arrow"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></span>
+                    </div>
+                    <span class="quick-desc">Claves de comunicación</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="icon">
+                    <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>
+                </span>
+                Módulos <span class="rule"></span>
+            </h2>
+
+            <div class="modules-grid">
+                <a class="module-card" href="SegundaPantalla/index1.html">
+                    <span class="module-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.4 2.3 3.7 5.2 3.7 8.5s-1.3 6.2-3.7 8.5c-2.4-2.3-3.7-5.2-3.7-8.5S9.6 5.8 12 3.5Z"/></svg>
+                    </span>
+                    <span class="module-title">Servicios</span>
+                </a>
+
+                <a class="module-card" href="SegundaPantalla/index2.html">
+                    <span class="module-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.1L3 17.5V21h3.5l6.1-6.1a4 4 0 0 0 5.1-5.6l-2.6 2.6-2-2Z"/></svg>
+                    </span>
+                    <span class="module-title">Herramientas</span>
+                </a>
+
+                <a class="module-card" href="SegundaPantalla/index3.html">
+                    <span class="module-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M8 3.5v17M3.5 9h17"/></svg>
+                    </span>
+                    <span class="module-title">Módulos</span>
+                </a>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <span>BOMBEROS TOOLKIT · Desarrollado para bomberos</span>
+            <span>v1.2 | Set-2026</span>
+        </footer>
+    </main>
+
+    <a class="telegram-fab" href="https://t.me/bomberostoolkit" target="_blank" rel="noopener" aria-label="Grupo de Telegram">
+        <img class="telegram-fab-btn" src="assets/icons/Telegram_logo.svg" alt="">
+
+        <span class="telegram-label">Grupo de Telegram</span>
+    </a>
+
     <script src="/register-sw.js" defer></script>
 </body>
 </html>

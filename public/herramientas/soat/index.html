@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta SOAT - Bomberos Toolkit</title>
+    <meta name="theme-color" content="#19171b">
+    <link rel="icon" type="image/svg+xml" href="../../assets/icons/logo.svg">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7L9S6V0X5X"></script>
+<script src="/assets/js/analytics.js"></script>
+
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/herramientas.css">
+<style>
+        .header h1 {
+            font-size: 1.6em;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: #2b0307;
+            border: 2px solid #51080d;
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 10px 14px;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #75020f;
+        }
+
+        .search-box button {
+            background: #75020f;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover:not(:disabled) {
+            background: #51080d;
+        }
+
+        .search-box button:disabled {
+            background: #3a3a3d;
+            cursor: not-allowed;
+        }
+
+        .helper-text {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .error-message {
+            display: none;
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 4px solid rgba(117, 2, 15, 0.2);
+            border-top: 4px solid #75020f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .results-container {
+            display: none;
+        }
+
+        .status-card {
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 5px solid transparent;
+        }
+
+        .status-card.vigente { background: rgba(16, 185, 129, 0.12); border-color: #10b981; color: #10b981; }
+        .status-card.no-vigente { background: rgba(239, 68, 68, 0.12); border-color: #ef4444; color: #ef4444; }
+        .status-card.anulada { background: rgba(245, 158, 11, 0.12); border-color: #f59e0b; color: #f59e0b; }
+        .status-card.sin-info { background: rgba(255, 255, 255, 0.06); border-color: rgba(255,255,255,0.4); color: #ffffff; }
+
+        .status-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid currentColor;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+            background: #2b0307;
+            padding: 12px 14px;
+            border-radius: 8px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .info-item.full {
+            grid-column: span 2;
+        }
+
+        .info-label {
+            font-size: 0.72em;
+            color: rgba(255, 255, 255, 0.55);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 0.92em;
+        }
+
+        .history-section h2 {
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #51080d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82em;
+        }
+
+        th {
+            background: #2b0307;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 600;
+            padding: 8px 10px;
+            border-bottom: 1px solid #51080d;
+            white-space: nowrap;
+            text-align: left;
+        }
+
+        td {
+            padding: 8px 10px;
+            border-bottom: 1px solid rgba(117, 2, 15, 0.3);
+            white-space: nowrap;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-item.full {
+                grid-column: span 1;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="window.history.back()" aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+
+    <header class="header">
+        <h1>Consulta SOAT</h1>
+        <p>Verifica el estado de vigencia del SOAT de un vehículo</p>
+    </header>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="placaInput" placeholder="Ej. ABC123" maxlength="7" autocomplete="off" aria-label="Placa del vehículo">
+            <button id="consultarBtn">Consultar</button>
+        </div>
+        <span class="helper-text">Ingresa la placa sin guiones ni espacios (Ej. ABC123, F3N482, A1A100).</span>
+
+        <div id="errorBox" class="error-message"></div>
+
+        <div id="loadingBox" class="loading-container">
+            <div class="spinner"></div>
+            <p>Consultando en la SBS...</p>
+        </div>
+
+        <div id="resultsBox" class="results-container">
+            <div id="statusCard" class="status-card">
+                <span class="status-title" id="statusTitle">VIGENTE</span>
+                <span class="status-badge" id="statusBadge">ACTIVO</span>
+            </div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Aseguradora</span>
+                    <span class="info-value" id="resAseguradora">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Clase de vehículo</span>
+                    <span class="info-value" id="resClase">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Uso del vehículo</span>
+                    <span class="info-value" id="resUso">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">N.º Póliza / Certificado</span>
+                    <span class="info-value" id="resPoliza">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Inicio vigencia</span>
+                    <span class="info-value" id="resInicio">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Fin vigencia</span>
+                    <span class="info-value" id="resFin">-</span>
+                </div>
+                <div class="info-item full" id="comentarioRow">
+                    <span class="info-label">Comentarios</span>
+                    <span class="info-value" id="resComentario">-</span>
+                </div>
+            </div>
+
+            <div class="history-section" id="historySection">
+                <h2>Historial de pólizas (últimos años)</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Aseguradora</th>
+                                <th>Clase</th>
+                                <th>Uso</th>
+                                <th>N.º Póliza</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
+                                <th>Comentario</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, (c) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        const placaInput = document.getElementById('placaInput');
+        const consultarBtn = document.getElementById('consultarBtn');
+        const errorBox = document.getElementById('errorBox');
+        const loadingBox = document.getElementById('loadingBox');
+        const resultsBox = document.getElementById('resultsBox');
+
+        placaInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') consultarSOAT();
+        });
+        consultarBtn.addEventListener('click', consultarSOAT);
+
+        async function consultarSOAT() {
+            const placa = placaInput.value.trim().replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+
+            if (!placa) return showError('Por favor, ingresa una placa vehicular.');
+            if (placa.length < 6) return showError('La placa ingresada es demasiado corta. Debe tener al menos 6 caracteres.');
+
+            errorBox.style.display = 'none';
+            resultsBox.style.display = 'none';
+            loadingBox.style.display = 'flex';
+            consultarBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/soat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ placa }),
+                });
+                const data = await res.json();
+                loadingBox.style.display = 'none';
+                consultarBtn.disabled = false;
+
+                if (!res.ok || data.error) {
+                    return showError(data.error || 'Ocurrió un error inesperado al procesar la consulta.');
+                }
+                renderResults(data, placa);
+            } catch (err) {
+                loadingBox.style.display = 'none';
+                consultarBtn.disabled = false;
+                showError('No se pudo conectar con el servidor. Intenta de nuevo.');
+            }
+        }
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+
+        function renderResults(data, placaOriginal) {
+            const statusCard = document.getElementById('statusCard');
+            const statusTitle = document.getElementById('statusTitle');
+            const statusBadge = document.getElementById('statusBadge');
+            statusCard.className = 'status-card';
+
+            if (data.status === 'SIN_REGISTROS') {
+                statusCard.classList.add('sin-info');
+                statusTitle.textContent = 'SIN REGISTROS';
+                statusBadge.textContent = 'NO REPORTADO';
+
+                document.getElementById('resAseguradora').textContent = 'Ninguna';
+                document.getElementById('resClase').textContent = '-';
+                document.getElementById('resUso').textContent = '-';
+                document.getElementById('resPoliza').textContent = '-';
+                document.getElementById('resInicio').textContent = '-';
+                document.getElementById('resFin').textContent = '-';
+                document.getElementById('resComentario').textContent =
+                    'La SBS no reporta información de pólizas SOAT para la placa ' + placaOriginal + '.';
+                document.getElementById('comentarioRow').style.display = 'flex';
+                document.getElementById('historySection').style.display = 'none';
+            } else {
+                const active = data.active_policy || {};
+
+                if (data.status === 'VIGENTE') {
+                    statusCard.classList.add('vigente');
+                    statusTitle.textContent = 'VIGENTE';
+                    statusBadge.textContent = 'ACTIVO';
+                } else if (data.status === 'ANULADA') {
+                    statusCard.classList.add('anulada');
+                    statusTitle.textContent = 'NO VIGENTE';
+                    statusBadge.textContent = 'ANULADA';
+                } else {
+                    statusCard.classList.add('no-vigente');
+                    statusTitle.textContent = 'NO VIGENTE';
+                    statusBadge.textContent = 'VENCIDO';
+                }
+
+                document.getElementById('resAseguradora').textContent = active.aseguradora || '-';
+                document.getElementById('resClase').textContent = active.clase || '-';
+                document.getElementById('resUso').textContent = active.uso || '-';
+                document.getElementById('resPoliza').textContent = active.poliza || active.certificado || '-';
+                document.getElementById('resInicio').textContent = active.inicio || '-';
+                document.getElementById('resFin').textContent = active.fin || '-';
+
+                if (active.comentario) {
+                    document.getElementById('resComentario').textContent = active.comentario;
+                    document.getElementById('comentarioRow').style.display = 'flex';
+                } else {
+                    document.getElementById('comentarioRow').style.display = 'none';
+                }
+
+                const tableBody = document.getElementById('historyTableBody');
+                if (data.history && data.history.length > 0) {
+                    tableBody.innerHTML = data.history.map((pol) => `
+                        <tr>
+                            <td><strong>${escapeHtml(pol.aseguradora)}</strong></td>
+                            <td>${escapeHtml(pol.clase)}</td>
+                            <td>${escapeHtml(pol.uso)}</td>
+                            <td>${escapeHtml(pol.poliza)}</td>
+                            <td>${escapeHtml(pol.inicio)}</td>
+                            <td>${escapeHtml(pol.fin)}</td>
+                            <td><span style="color:rgba(255,255,255,0.6); font-style:italic;">${escapeHtml(pol.comentario || '')}</span></td>
+                        </tr>
+                    `).join('');
+                    document.getElementById('historySection').style.display = 'block';
+                } else {
+                    document.getElementById('historySection').style.display = 'none';
+                }
+            }
+
+            resultsBox.style.display = 'block';
+        }
+    </script>
+    <script src="/register-sw.js" defer></script>
+</body>
+</html>
