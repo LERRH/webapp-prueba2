@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Búsqueda por DNI - Bomberos Toolkit</title>
+    <meta name="theme-color" content="#19171b">
+    <link rel="icon" type="image/svg+xml" href="../../assets/icons/logo.svg">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7L9S6V0X5X"></script>
+<script src="/assets/js/analytics.js"></script>
+
+    <link rel="stylesheet" href="/assets/css/base.css">
+    <link rel="stylesheet" href="/assets/css/herramientas.css">
+<style>
+        .header h1 {
+            font-size: 1.6em;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: #2b0307;
+            border: 2px solid #51080d;
+            border-radius: 8px;
+            color: #ffffff;
+            padding: 10px 14px;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #75020f;
+        }
+
+        .search-box button {
+            background: #75020f;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover:not(:disabled) {
+            background: #51080d;
+        }
+
+        .search-box button:disabled {
+            background: #3a3a3d;
+            cursor: not-allowed;
+        }
+
+        .helper-text {
+            font-size: 0.8em;
+            color: rgba(255, 255, 255, 0.55);
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .error-message, .no-encontrado {
+            display: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        .no-encontrado {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .loading-container {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 4px solid rgba(117, 2, 15, 0.2);
+            border-top: 4px solid #75020f;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            display: none;
+            background: #2b0307;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-bottom: 14px;
+        }
+
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            font-size: 0.72em;
+            color: rgba(255, 255, 255, 0.55);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .result-value {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+</style>
+</head>
+<body>
+    <button class="back-button" onclick="window.history.back()" aria-label="Volver"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+
+    <header class="header">
+        <h1>Búsqueda por DNI</h1>
+        <p>Identifica a una persona por su número de DNI</p>
+    </header>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="dniInput" placeholder="Ej. 12345678" maxlength="8" inputmode="numeric" autocomplete="off" aria-label="Número de DNI">
+            <button id="buscarBtn">Buscar</button>
+        </div>
+        <span class="helper-text">Ingresa los 8 dígitos del DNI, sin espacios ni guiones.</span>
+
+        <div id="errorBox" class="error-message"></div>
+        <div id="noEncontradoBox" class="no-encontrado">No se encontró información para el DNI ingresado.</div>
+
+        <div id="loadingBox" class="loading-container">
+            <div class="spinner"></div>
+            <p>Buscando...</p>
+        </div>
+
+        <div id="resultCard" class="result-card">
+            <div class="result-item">
+                <span class="result-label">Nombres</span>
+                <span class="result-value" id="resNombres">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Apellido paterno</span>
+                <span class="result-value" id="resApellidoP">-</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Apellido materno</span>
+                <span class="result-value" id="resApellidoM">-</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dniInput = document.getElementById('dniInput');
+        const buscarBtn = document.getElementById('buscarBtn');
+        const errorBox = document.getElementById('errorBox');
+        const noEncontradoBox = document.getElementById('noEncontradoBox');
+        const loadingBox = document.getElementById('loadingBox');
+        const resultCard = document.getElementById('resultCard');
+
+        dniInput.addEventListener('input', () => {
+            dniInput.value = dniInput.value.replace(/\D/g, '');
+        });
+        dniInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') buscarDni();
+        });
+        buscarBtn.addEventListener('click', buscarDni);
+
+        async function buscarDni() {
+            const dni = dniInput.value.trim();
+            if (dni.length !== 8) return showError('El DNI debe tener 8 dígitos.');
+
+            errorBox.style.display = 'none';
+            noEncontradoBox.style.display = 'none';
+            resultCard.style.display = 'none';
+            loadingBox.style.display = 'flex';
+            buscarBtn.disabled = true;
+
+            try {
+                const res = await fetch('/api/dni', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ dni }),
+                });
+                const data = await res.json();
+                loadingBox.style.display = 'none';
+                buscarBtn.disabled = false;
+
+                if (!res.ok || data.error) {
+                    return showError(data.error || 'Ocurrió un error inesperado.');
+                }
+
+                if (!data.encontrado) {
+                    noEncontradoBox.style.display = 'block';
+                    return;
+                }
+
+                document.getElementById('resNombres').textContent = data.nombres || '-';
+                document.getElementById('resApellidoP').textContent = data.apellido_paterno || '-';
+                document.getElementById('resApellidoM').textContent = data.apellido_materno || '-';
+                resultCard.style.display = 'block';
+            } catch (err) {
+                loadingBox.style.display = 'none';
+                buscarBtn.disabled = false;
+                showError('No se pudo conectar con el servidor. Intenta de nuevo.');
+            }
+        }
+
+        function showError(msg) {
+            errorBox.textContent = msg;
+            errorBox.style.display = 'block';
+        }
+    </script>
+    <script src="/register-sw.js" defer></script>
+</body>
+</html>
