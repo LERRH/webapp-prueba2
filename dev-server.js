@@ -54,6 +54,8 @@ const server = http.createServer(async (req, res) => {
 
   if (url.pathname.startsWith("/api/")) {
     const apiFile = path.join(__dirname, "api", url.pathname.replace("/api/", "") + ".js");
+    // Vercel parsea automáticamente el query string a req.query; Node puro no.
+    req.query = Object.fromEntries(url.searchParams);
     // Vercel inyecta res.status()/res.json(); Node puro no los trae.
     res.status = (code) => {
       res.statusCode = code;

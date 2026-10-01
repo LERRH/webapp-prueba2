@@ -373,6 +373,38 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+        // TODO: reemplazar por la Site Key real de reCAPTCHA v3 cuando esté lista.
+        const RECAPTCHA_SITE_KEY = '6LdV19gtAAAAAHkfISdmq9v7cHnbJFYvqaBnxqu6';
+        let recaptchaLoadPromise = null;
+
+        function cargarScriptRecaptcha() {
+            if (recaptchaLoadPromise) return recaptchaLoadPromise;
+            recaptchaLoadPromise = new Promise((resolve, reject) => {
+                if (window.grecaptcha) return resolve();
+                const script = document.createElement('script');
+                script.src = `https://www.google.com/recaptcha/api.js?render=${RECAPTCHA_SITE_KEY}`;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error('No se pudo cargar reCAPTCHA'));
+                document.head.appendChild(script);
+            });
+            return recaptchaLoadPromise;
+        }
+
+        async function obtenerTokenRecaptcha(action) {
+            if (!RECAPTCHA_SITE_KEY || RECAPTCHA_SITE_KEY === 'TU_SITE_KEY_AQUI') return null;
+            try {
+                await cargarScriptRecaptcha();
+                return await new Promise((resolve, reject) => {
+                    grecaptcha.ready(() => {
+                        grecaptcha.execute(RECAPTCHA_SITE_KEY, { action }).then(resolve).catch(reject);
+                    });
+                });
+            } catch (err) {
+                console.error('No se pudo obtener el token de reCAPTCHA:', err);
+                return null;
+            }
+        }
+
         function escapeHtml(str) {
             return String(str ?? '').replace(/[&<>"']/g, (c) => ({
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -459,7 +491,11 @@
             container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Obteniendo emergencias...</p></div>`;
 
             try {
-                const res = await fetch('/api/emergencias-oficial');
+                const token = await obtenerTokenRecaptcha('cargar_emergencias');
+                const url = token
+                    ? `/api/emergencias-oficial?recaptchaToken=${encodeURIComponent(token)}`
+                    : '/api/emergencias-oficial';
+                const res = await fetch(url);
                 const data = await res.json();
                 btnRefresh.disabled = false;
                 btnRefresh.textContent = 'Actualizar';
