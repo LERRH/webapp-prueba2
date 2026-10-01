@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubicación de Emergencias (Prueba) - Bomberos Toolkit</title>
+    <meta name="theme-color" content="#19102e">
+    <link rel="icon" type="image/svg+xml" href="assets/icons/logo.svg">
+    <link rel="stylesheet" href="/assets/css/base.css">
+<style>
+        :root {
+            --violet: #a78bfa;
+            --violet-soft: rgba(167, 139, 250, 0.15);
+            --violet-border: rgba(167, 139, 250, 0.4);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0D0D0D;
+            color: #ffffff;
+            line-height: 1.5;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 16px;
+            background: #19102e;
+            border-bottom: 1px solid rgba(167, 139, 250, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .back-link {
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: rgba(167, 139, 250, 0.9);
+            border: none;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .back-link svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .page-header h1 {
+            flex: 1;
+            font-size: 1em;
+            font-weight: 700;
+        }
+
+        .page-header .tag {
+            font-size: 0.65em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--violet);
+            background: var(--violet-soft);
+            border: 1px solid var(--violet-border);
+            padding: 3px 8px;
+            border-radius: 20px;
+        }
+
+        .btn-refresh {
+            background: var(--violet);
+            color: #19102e;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 0.8em;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-refresh:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .source-note {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 8px 16px 0;
+            font-size: 0.72em;
+            color: rgba(255, 255, 255, 0.4);
+            text-align: center;
+        }
+
+        .source-note a {
+            color: rgba(167, 139, 250, 0.7);
+            text-decoration: none;
+        }
+
+        .source-note a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        .loading, .error-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .spinner {
+            width: 36px;
+            height: 36px;
+            border: 4px solid rgba(167, 139, 250, 0.2);
+            border-top: 4px solid var(--violet);
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .error-message {
+            color: #f87171;
+        }
+
+        /* ===== TARJETA DE EMERGENCIA ===== */
+        .emergencia-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            padding: 22px;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            background-image:
+                linear-gradient(90deg, rgba(18, 10, 36, 0.97) 0%, rgba(18, 10, 36, 0.88) 45%, rgba(18, 10, 36, 0.45) 78%, rgba(18, 10, 36, 0.1) 100%),
+                url('assets/icons/fondo-emergencia.webp');
+            background-size: cover;
+            background-position: right center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .card-number {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .card-number .line {
+            width: 36px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: var(--violet-soft);
+            border: 1px solid var(--violet-border);
+            color: var(--violet);
+            font-size: 0.72em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+
+        .status-badge svg {
+            width: 10px;
+            height: 10px;
+            fill: none;
+            stroke: var(--violet);
+            stroke-width: 3;
+        }
+
+        .status-badge.cerrado {
+            color: #9ca3af;
+            border-color: rgba(156, 163, 175, 0.4);
+            background: rgba(156, 163, 175, 0.12);
+        }
+
+        .status-badge.cerrado svg { stroke: #9ca3af; }
+
+        .btn-download {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .btn-download svg {
+            width: 15px;
+            height: 15px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .btn-download span {
+            font-size: 0.5em;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-download:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .info-row.align-start {
+            align-items: flex-start;
+        }
+
+        .info-icon {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            border-radius: 9px;
+            background: var(--violet-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: var(--violet);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .info-text {
+            font-size: 0.88em;
+            color: #ffffff;
+        }
+
+        .info-coords {
+            font-size: 0.82em;
+            color: var(--violet);
+            margin-top: 3px;
+        }
+
+        .card-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 6px;
+        }
+
+        .card-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--violet-border);
+            background: rgba(167, 139, 250, 0.1);
+            color: #ffffff;
+            font-size: 0.9em;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .card-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .card-no-coords {
+            margin-top: auto;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.75);
+        }
+</style>
+</head>
+<body>
+    <header class="page-header">
+        <button class="back-link" onclick="window.history.back()" aria-label="Volver">
+            <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <h1>Ubicación de Emergencias</h1>
+        <button class="btn-refresh" id="btnRefresh">Actualizar</button>
+    </header>
+
+    <p class="source-note">Información pública de <a href="https://sgonorte.bomberosperu.gob.pe/24horas" target="_blank" rel="noopener">sgonorte.bomberosperu.gob.pe</a>. Para mayor precisión, confirma con la central.</p>
+
+    <div class="container" id="container">
+        <div class="loading" id="loadingBox">
+            <div class="spinner"></div>
+            <p>Presiona "Actualizar" para cargar las emergencias</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
+        function escapeHtml(str) {
+            return String(str ?? '').replace(/[&<>"']/g, (c) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        const ICONS = {
+            doc: '<svg viewBox="0 0 24 24"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>',
+            pin: '<svg viewBox="0 0 24 24"><path d="M12 22s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+            clock: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>',
+            truck: '<svg viewBox="0 0 24 24"><path d="M3 16V7a1 1 0 0 1 1-1h9v10"/><path d="M13 10h4l3 3v3h-2"/><circle cx="7.5" cy="17" r="1.7"/><circle cx="16.5" cy="17" r="1.7"/><path d="M9 17h6"/></svg>',
+            download: '<svg viewBox="0 0 24 24"><path d="M12 3v12m0 0 4-4m-4 4-4-4"/><path d="M4 19h16"/></svg>',
+            chevron: '<svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>',
+        };
+
+        function cardHTML(e) {
+            const hasCoords = e.lat != null && e.lon != null;
+            const statusClass = e.estado === 'CERRADO' ? 'cerrado' : '';
+
+            const botonesHTML = hasCoords
+                ? `<div class="card-buttons">
+                        <a class="card-btn" href="https://waze.com/ul?ll=${e.lat},${e.lon}&navigate=yes" target="_blank" rel="noopener">Waze ${ICONS.chevron}</a>
+                        <a class="card-btn" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lon}" target="_blank" rel="noopener">Maps ${ICONS.chevron}</a>
+                   </div>`
+                : `<div class="card-no-coords">📍 Pedir 10.18 a central</div>`;
+
+            return `
+                <div class="emergencia-card" data-parte="${escapeHtml(e.parte)}">
+                    <div class="card-top">
+                        <div class="card-number">#${e.numero} <span class="line"></span></div>
+                        <div class="card-actions">
+                            <span class="status-badge ${statusClass}"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg>${escapeHtml(e.estado)}</span>
+                            <button class="btn-download" aria-label="Descargar como imagen">${ICONS.download}<span>PNG</span></button>
+                        </div>
+                    </div>
+
+                    <div class="card-title">${escapeHtml(e.tipo)}</div>
+                    <div class="card-divider"></div>
+
+                    <div class="info-row">
+                        <span class="info-icon">${ICONS.doc}</span>
+                        <span class="info-text">N° Parte: <strong>${escapeHtml(e.parte)}</strong></span>
+                    </div>
+
+                    <div class="info-row align-start">
+                        <span class="info-icon">${ICONS.pin}</span>
+                        <div>
+                            <div class="info-text">${escapeHtml(e.direccion)}</div>
+                            ${hasCoords ? `<div class="info-coords">(${e.lat.toFixed(4)}, ${e.lon.toFixed(4)})</div>` : ''}
+                        </div>
+                    </div>
+
+                    <div class="info-row">
+                        <span class="info-icon">${ICONS.clock}</span>
+                        <span class="info-text">${escapeHtml(e.fechaHora)}</span>
+                    </div>
+
+                    ${e.maquinas ? `
+                    <div class="info-row align-start">
+                        <span class="info-icon">${ICONS.truck}</span>
+                        <span class="info-text">${escapeHtml(e.maquinas)}</span>
+                    </div>` : ''}
+
+                    ${botonesHTML}
+                </div>
+            `;
+        }
+
+        const FUENTE_OFICIAL_FALLBACK = 'https://sgonorte.bomberosperu.gob.pe/24horas';
+
+        function redirigirAFuenteOficial() {
+            const container = document.getElementById('container');
+            container.innerHTML = `<div class="loading"><p>El servicio no está disponible en este momento.</p><p>Redirigiendo a la fuente oficial...</p></div>`;
+            setTimeout(() => {
+                window.location.href = FUENTE_OFICIAL_FALLBACK;
+            }, 1200);
+        }
+
+        async function cargarEmergencias() {
+            const container = document.getElementById('container');
+            const btnRefresh = document.getElementById('btnRefresh');
+            btnRefresh.disabled = true;
+            btnRefresh.textContent = 'Cargando...';
+            container.innerHTML = `<div class="loading"><div class="spinner"></div><p>Obteniendo emergencias...</p></div>`;
+
+            try {
+                const res = await fetch('/api/emergencias-oficial');
+                const data = await res.json();
+                btnRefresh.disabled = false;
+                btnRefresh.textContent = 'Actualizar';
+
+                // Si la API oficial falla o está saturada (error de servidor,
+                // timeout, respuesta sin éxito), se redirige a la fuente
+                // pública en vez de dejar al usuario sin información.
+                if (!res.ok || !data.success) {
+                    redirigirAFuenteOficial();
+                    return;
+                }
+
+                if (!data.emergencias || data.emergencias.length === 0) {
+                    container.innerHTML = `<div class="loading">No hay emergencias activas en este momento.</div>`;
+                    return;
+                }
+
+                container.innerHTML = data.emergencias.map(cardHTML).join('');
+            } catch (err) {
+                btnRefresh.disabled = false;
+                btnRefresh.textContent = 'Actualizar';
+                redirigirAFuenteOficial();
+            }
+        }
+
+        document.getElementById('btnRefresh').addEventListener('click', cargarEmergencias);
+
+        // Cargar automáticamente al abrir la página.
+        cargarEmergencias();
+
+        document.getElementById('container').addEventListener('click', async (e) => {
+            const btn = e.target.closest('.btn-download');
+            if (!btn) return;
+            const card = btn.closest('.emergencia-card');
+            btn.disabled = true;
+
+            try {
+                const canvas = await html2canvas(card, { backgroundColor: null, scale: 2, useCORS: true });
+                const link = document.createElement('a');
+                link.download = `emergencia-${card.dataset.parte || 'parte'}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                console.error('Error al generar la imagen:', err);
+            } finally {
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
