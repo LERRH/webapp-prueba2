@@ -203,6 +203,37 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
+        .juego-destacado {
+            animation: juego-brillo 2.4s ease-in-out infinite;
+        }
+
+        .juego-destacado .quick-icon {
+            animation: juego-flotar 1.8s ease-in-out infinite;
+        }
+
+        @keyframes juego-brillo {
+            0%, 100% {
+                border-color: rgba(255, 255, 255, 0.16);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+            }
+            50% {
+                border-color: rgba(255, 140, 60, 0.85);
+                box-shadow: 0 0 18px rgba(255, 110, 40, 0.45), 0 6px 18px rgba(0, 0, 0, 0.35);
+            }
+        }
+
+        @keyframes juego-flotar {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .juego-destacado,
+            .juego-destacado .quick-icon {
+                animation: none;
+            }
+        }
+
         .quick-card-split {
             flex-direction: row;
             padding: 0;
@@ -425,7 +456,7 @@
                     <span class="quick-desc">Claves de comunicación</span>
                 </a>
 
-                <a class="quick-card grey" href="https://lerrh.github.io/bombero-jump/" target="_blank" rel="noopener">
+                <a class="quick-card grey juego-destacado" href="https://lerrh.github.io/bombero-jump/" target="_blank" rel="noopener">
                     <span class="quick-icon">
                         <svg class="icon" viewBox="0 0 24 24"><path d="M12 3c1.5 3 4 4.5 4 8a4 4 0 0 1-8 0c0-1.5.6-2.5 1.5-3.5C10 9 11 10 12 10c0-2 0-4 0-7Z"/><path d="M8 21h8"/></svg>
                     </span>
