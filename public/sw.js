@@ -1,4 +1,4 @@
-const CACHE_NAME = "bomberos-toolkit-v1";
+const CACHE_NAME = "bomberos-toolkit-v2";
 
 const APP_SHELL = [
   "/",
@@ -32,6 +32,8 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
+  // Recursos de otros dominios (Analytics, AdSense) no se cachean.
+  if (url.origin !== self.location.origin) return;
   // Los datos de emergencias deben ser siempre frescos: nunca se cachean.
   if (url.pathname.startsWith("/api/")) return;
 
